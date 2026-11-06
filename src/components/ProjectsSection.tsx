@@ -6,13 +6,12 @@ import {
   ChevronRight,
   Code2,
   Cpu,
-  Filter,
   Layers,
   MapPin,
   Sparkles,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { ProjectCategoryId, ProjectItem } from '../types/portfolio';
+import { ProjectItem } from '../types/portfolio';
 import { SpotlightCard } from './ui/SpotlightCard';
 import { RevealGroup } from './ui/Reveal';
 import { buttonMotion } from '../lib/motion';
@@ -25,22 +24,11 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   onSelectArchitecture,
 }) => {
   const { t, content } = useLanguage();
-  const [selectedCategory, setSelectedCategory] =
-    useState<ProjectCategoryId>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const filteredProjects = content.projects.filter((project) => {
-    const matchesCategory =
-      selectedCategory === 'all' ||
-      project.categories.includes(selectedCategory);
-    const matchesTag = !selectedTag || project.tags.includes(selectedTag);
-    return matchesCategory && matchesTag;
+    return !selectedTag || project.tags.includes(selectedTag);
   });
-
-  const handleCategoryChange = (cat: ProjectCategoryId) => {
-    setSelectedCategory(cat);
-    setSelectedTag(null);
-  };
 
   return (
     <section
@@ -58,35 +46,11 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
               {t.projects.sectionTitle}
             </h2>
-            <p className="max-w-2xl text-sm text-zinc-400 sm:text-base">
-              {t.projects.sectionSubtitle}
-            </p>
+            
           </RevealGroup>
 
           {/* Category Filter Bar */}
-          <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-white/10 bg-zinc-900/70 p-1.5">
-            <span className="hidden sm:inline-flex items-center gap-1 px-2 font-mono text-[11px] text-zinc-400">
-              <Filter className="h-3 w-3" />
-              {t.projects.domainFilterLabel}
-            </span>
-            {content.projectCategories.map((category) => {
-              const active = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => handleCategoryChange(category.id)}
-                  className={`whitespace-nowrap rounded-lg px-3 py-1.5 font-mono text-xs transition-all ${
-                    active
-                      ? 'bg-zinc-100 font-semibold text-zinc-950 shadow-sm'
-                      : 'text-zinc-400 hover:bg-white/[0.05] hover:text-zinc-200'
-                  }`}
-                >
-                  {category.label}
-                </button>
-              );
-            })}
-          </div>
+         
         </div>
 
         {/* Active Tag Filter Pill */}
